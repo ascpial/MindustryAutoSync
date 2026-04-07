@@ -7,6 +7,8 @@ sourceSets.main.java.srcDirs = ["src"]
 repositories{
     mavenCentral()
 
+    maven{ url = 'https://jitpack.io' }
+
     //Downloads the server-release JAR file from Mindustry releases; does not use any real repository. Surprisingly, this is the most reliable option.
     ivy{
         url 'https://github.com/'
@@ -56,6 +58,18 @@ dependencies{
     compileOnly useLatest ? "Anuken:MindustryBuilds:latest" : "Anuken:Mindustry:$mindustryVersion"
 
     annotationProcessor "Anuken:jabel:v1.0.0"
+
+    compileOnly "com.github.Anuken.Arc:arc-core:b1b048e64f"
+    compileOnly "com.github.Anuken.Arc:backend-android:b1b048e64f"
+
+    def version, highestVersion
+    new File((String)sdkRoot, "/platforms").eachFileMatch ~/android-\d+/, {
+        version = it.name.find(/\d+/).toInteger()
+        highestVersion = version > highestVersion ? version : highestVersion
+    }
+
+    def sdkFile = new File((String)sdkRoot, "/platforms/android-${highestVersion}/android.jar")
+    if(sdkFile.exists()) compileOnly files(sdkFile.absolutePath)
 }
 
 tasks.register('jarAndroid'){
