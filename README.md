@@ -28,6 +28,8 @@ Once you got that working, I recommend following these steps, **in order** :
 
 At this point, everything should be working!
 
+Regularly make offline backup of your save. Issue will happen, and you don't want to lose your progress.
+
 ## Limitations
 
 The most important limitation is that you cannot use two devices connected to the same save at the same moment.
