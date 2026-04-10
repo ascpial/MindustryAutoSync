@@ -1,5 +1,5 @@
 #the mod name as displayed in-game
-displayName: "Mindustry Auto Sync"
+displayName: "Auto Sync"
 
 #the internal name of your mod
 name: "mas"
@@ -21,3 +21,5 @@ minGameVersion: 154
 
 #this is a java mod
 java: true
+
+hidden: true

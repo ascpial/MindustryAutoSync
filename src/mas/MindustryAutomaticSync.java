@@ -13,7 +13,7 @@ import java.io.IOException;
 import static mindustry.Vars.ui;
 
 public class MindustryAutomaticSync extends Mod {
-    private ExportManager em;
+    private final ExportManager em;
 
     // Message shown when game has finalized starting
     private String message;
@@ -24,19 +24,27 @@ public class MindustryAutomaticSync extends Mod {
 
         em = new ExportManager();
         try {
-            em.importData();
+            // TODO: Show warning if import failed, and most importantly the reason it failed
+            boolean valid = em.importData();
+            if (!valid) {
+                message = "@mas-invalid-import";
+            }
         } catch (IllegalArgumentException e) {
             message = Core.bundle.get("mas-invalid-import") + "\n" + e;
         }
 
         Events.on(EventType.SaveLoadEvent.class, e -> {
-            // This is very ugly, but it's in place until I find a better way...
+            // TODO: This is very ugly, but it's in place until I find a better way...
+            // This will probably involve mixins, I need to figure this out
             Timer.schedule(() -> {
                 try {
                     em.exportData();
                 } catch (IOException exc) {
                     exc.printStackTrace();
                     ui.showException(exc);
+                } catch (SecurityException exc) {
+                    exc.printStackTrace();
+                    ui.showInfo("@mas-insufficient-permissions");
                 }
             }, 0.25F);
         });
@@ -46,6 +54,9 @@ public class MindustryAutomaticSync extends Mod {
             } catch (IOException exc) {
                 exc.printStackTrace();
                 ui.showException(exc);
+            } catch (SecurityException exc) {
+                exc.printStackTrace();
+                ui.showInfo("@mas-insufficient-permissions");
             }
         });
         Events.on(EventType.ClientLoadEvent.class, e -> {

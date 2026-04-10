@@ -12,6 +12,8 @@ import arc.util.io.Streams;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -77,7 +79,6 @@ public class ExportManager {
      */
     @Nullable
     public Fi getSyncFile() {
-        // TODO: more reliable issue catching
         if (android) {
             return new AndroidContentFi(getSyncLocation());
         } else {
@@ -112,12 +113,12 @@ public class ExportManager {
      * settings such as scaling) and last sync check.
      * Also checks that MAS is currently enabled.
      * @param file The file to import from.
-     * @return Last synced timestamp contained in the provided ZIP, or 0 if no file has been imported
+     * @return True if import was successful, or no import is required, false if import failed in some way.
      * @throws IllegalArgumentException When the provided file is not valid.
      */
     public boolean importData(Fi file) throws IllegalArgumentException {
         if (!isImportEnabled()) {
-            return false;
+            return true;
         }
         //filter and save the current settings (graphical, keybinds...) and keep the non-gameplay related ones
         Seq<Setting> settings_backup = new Seq<>();
@@ -155,7 +156,7 @@ public class ExportManager {
         if (lastSynced <= getLastSynced()) {
             Log.info("MAS export is up to date, not importing.");
             dest.delete();
-            return false;
+            return true;
         }
 
         //delete old saves so they don't interfere
@@ -164,13 +165,19 @@ public class ExportManager {
         //purge existing tmp data, keep everything else
         tmpDirectory.deleteDirectory();
 
-        try {
-            zipped.walk(f -> f.copyTo(base.child(f.path())));
-        } catch (Exception e) {
-            // TODO: What if files fail, permissions are messed up?...
-            e.printStackTrace();
-        }
+        List<String> failed = new ArrayList<>();
+        zipped.walk(f -> {
+            try {
+                f.copyTo(base.child(f.path()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                failed.add(f.path());
+            }
+        });
         dest.delete();
+        if (!failed.isEmpty()) {
+            ui.showInfo("MAS failed to copy some files:\n" + String.join("\n", failed));
+        }
 
         //clear old data
         settings.clear();
@@ -197,9 +204,10 @@ public class ExportManager {
      * Doesn't check that MAS is currently enabled.
      * @param file The file to export to.
      * @throws IOException When the file cannot be written to.
+     * @throws SecurityException On Android if the app doesn't have a persistent URI access to the resource.
      */
-    public void exportData(Fi file) throws IOException {
-        if (!isExportEnabled()) return;
+    public void exportData(Fi file) throws IOException, SecurityException {
+        if (!isExportEnabled());
         setLastSynced(System.currentTimeMillis());
         Seq<Fi> files = new Seq<>();
         files.add(Core.settings.getSettingsFile());
