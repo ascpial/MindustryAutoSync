@@ -1,5 +1,9 @@
 # Mindustry Auto Sync
 
+> **Warning**  
+> For now, this mod has a known issue when it comes to loading newly explored sectors and schematics from other devices. I'm not sure if it is possible to fix that without restarting the game, which is the main goal of the mod.
+> **I recommend not using this mod until this get fixed.**
+
 Mindustry Auto Sync (MAS for short) is a Java mod that allows you to export your save to a file on your system.
 
 When the game starts, this mod also (optionally) checks the file, and, if it is newer, loads it seamlessly.
@@ -32,7 +36,7 @@ Regularly make offline backup of your save. Issue will happen, and you don't wan
 
 ## Limitations
 
-The most important limitation is that you cannot use two devices connected to the same save at the same moment.
+The most important limitation is that you cannot use two devices connected to the same save at the same time.
 If you open two games at the same time, the game that closes last will overwrite the exported file.
 
 The file will only get imported when the game starts. If the save gets changed while the game is opened, it will likely get overwritten when the game closes.
