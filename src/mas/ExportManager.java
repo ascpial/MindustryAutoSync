@@ -207,7 +207,7 @@ public class ExportManager {
      * @throws SecurityException On Android if the app doesn't have a persistent URI access to the resource.
      */
     public void exportData(Fi file) throws IOException, SecurityException {
-        if (!isExportEnabled());
+        if (!isExportEnabled()) return;
         setLastSynced(System.currentTimeMillis());
         Seq<Fi> files = new Seq<>();
         files.add(Core.settings.getSettingsFile());

@@ -59,17 +59,22 @@ dependencies{
 
     annotationProcessor "Anuken:jabel:v1.0.0"
 
-    compileOnly "com.github.Anuken.Arc:arc-core:b1b048e64f"
-    compileOnly "com.github.Anuken.Arc:backend-android:b1b048e64f"
+    compileOnly "com.github.Anuken.Arc:arc-core:b1b048e64fb2d1fd5bf834fb4447c80953578f7b"
+    compileOnly "com.github.Anuken.Arc:backend-android:b1b048e64fb2d1fd5bf834fb4447c80953578f7b"
+    compileOnly "com.google.android:android:4.1.1.4"
 
-    def version, highestVersion
-    new File((String)sdkRoot, "/platforms").eachFileMatch ~/android-\d+/, {
-        version = it.name.find(/\d+/).toInteger()
-        highestVersion = version > highestVersion ? version : highestVersion
+    if(sdkRoot){
+        def version, highestVersion
+        new File(sdkRoot, "platforms").eachFileMatch ~/android-\d+/, {
+            version = it.name.find(/\d+/).toInteger()
+            highestVersion = highestVersion == null || version > highestVersion ? version : highestVersion
+        }
+
+        if(highestVersion != null){
+            def sdkFile = new File(sdkRoot, "platforms/android-${highestVersion}/android.jar")
+            if(sdkFile.exists()) compileOnly files(sdkFile.absolutePath)
+        }
     }
-
-    def sdkFile = new File((String)sdkRoot, "/platforms/android-${highestVersion}/android.jar")
-    if(sdkFile.exists()) compileOnly files(sdkFile.absolutePath)
 }
 
 tasks.register('jarAndroid'){
