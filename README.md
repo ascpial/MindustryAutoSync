@@ -89,3 +89,5 @@ There are a few underlying issues with the current code.
 These include failures to update schematics and losing sectors.
 
 Until I refactor the code in order to fix these issues, I will not accept PRs fixing basic issues.
+
+A PR fixing the underlying issue could be accepted, but only after discussing the solution in a Github issue.
