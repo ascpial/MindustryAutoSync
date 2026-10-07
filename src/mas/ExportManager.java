@@ -12,8 +12,7 @@ import arc.util.io.Streams;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -123,8 +122,7 @@ public class ExportManager {
         //filter and save the current settings (graphical, keybinds...) and keep the non-gameplay related ones
         Seq<Setting> settings_backup = new Seq<>();
         for (String setting : Core.settings.keys()) {
-            if (!setting.startsWith("req-") && !setting.contains("serpulo") && !setting.contains("erekir")
-                    && !setting.contains("unlocked") && !setting.contains("campaign") && !setting.contains("last")) {
+            if (local_settings.contains(setting)) {
                 settings_backup.add(new Setting(setting));
             }
         }
@@ -183,6 +181,8 @@ public class ExportManager {
         settings.clear();
         //load data so it's saved on exit
         settings.load();
+        schematics.load();
+
         //load previous settings
         for (Setting setting : settings_backup) {
             setting.apply();
@@ -207,7 +207,7 @@ public class ExportManager {
      * @throws SecurityException On Android if the app doesn't have a persistent URI access to the resource.
      */
     public void exportData(Fi file) throws IOException, SecurityException {
-        if (!isExportEnabled());
+        if (!isExportEnabled()) return;
         setLastSynced(System.currentTimeMillis());
         Seq<Fi> files = new Seq<>();
         files.add(Core.settings.getSettingsFile());
@@ -248,4 +248,87 @@ public class ExportManager {
     public void exportData() throws IOException {
         exportData(getSyncFile());
     }
+
+    // Settings that are not synced accross devices
+    public static final Set<String> local_settings = new HashSet(Arrays.asList(
+            "unlocks",
+            "keyboard",
+            "alwaysmusic",
+            "musicvol",
+            "sfxvol",
+            "ambientvol",
+            "saveinterval",
+            "autotarget",
+            "keyboard",
+            "keyboard",
+            "touchscreen",
+            "touchscreen",
+            "communityservers",
+            "savecreate",
+            "blockreplace",
+            "conveyorpathfinding",
+            "hints",
+            "backgroundpause",
+            "buildautopause",
+            "distinctcontrolgroups",
+            "doubletapmine",
+            "commandmodehold",
+            "playerlimit",
+            "uiEdgePadding",
+            "uiscale",
+            "uiscale",
+            "uiscalechanged",
+            "screenshake",
+            "bloomintensity",
+            "bloomblur",
+            "fpscap",
+            "fpscap",
+            "chatopacity",
+            "lasersopacity",
+            "preferredlaseropacity",
+            "unitlaseropacity",
+            "bridgeopacity",
+            "maxmagnificationmultiplierpercent",
+            "maxzoomingamemultiplier",
+            "minmagnificationmultiplierpercent",
+            "minzoomingamemultiplier",
+            "vsync",
+            "fullscreen",
+            "vsync",
+            "fullscreen",
+            "landscape",
+            "landscape",
+            "effects",
+            "atmosphere",
+            "drawlight",
+            "destroyedblocks",
+            "blockstatus",
+            "playerchat",
+            "coreitems",
+            "minimap",
+            "smoothcamera",
+            "detach-camera",
+            "position",
+            "mouseposition",
+            "fps",
+            "playerindicators",
+            "showpings",
+            "showotherbuildplans",
+            "indicators",
+            "showweather",
+            "animatedwater",
+            "bloom",
+            "pixelate",
+            "linear",
+            "linear",
+            "skipcoreanimation",
+            "hidedisplays",
+            "logiclocalization",
+            "macnotch",
+            "swapdiagonal",
+            "console",
+            "drawhitboxes",
+            "showperformance",
+            "modcrashdisable"
+    ));
 }

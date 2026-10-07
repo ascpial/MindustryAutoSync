@@ -41,6 +41,9 @@ If you open two games at the same time, the game that closes last will overwrite
 
 The file will only get imported when the game starts. If the save gets changed while the game is opened, it will likely get overwritten when the game closes.
 
+The setup process is a bit cumbersome, and updating the mod is not easy at all.
+Improving these processes is not trivial, but I'm probably still going to work on that.
+
 iOS devices cannot, and will not, be supported.
 
 ## Neat things
@@ -56,3 +59,33 @@ If you have an issue with the mod, don't hesitate to open an issue!
 This will be especially useful for platforms I don't test on, such as Windows.
 
 Feature requests are accepted, but as I feel like the mod is feature complete, they will probably get closed quickly.
+
+## Building the project
+
+The Android SDK is required in order to build the project.
+Android is one of the main targeted platforms and this will not change.
+
+This means that the first step for configuring the projet is to install the Android SDK.
+Steps differ depending on the platform.
+
+Don't forget to setup environment variables so gradle knows where to look for the SDK.
+This project looks for the variables `ANDROID_HOME` or `ANDROID_SDK_ROOT`.
+
+Once the Android SDK is downloaded and preferably permanently added to the path, you can compile the project by running:
+
+```bash
+./gradlew build
+```
+
+The specific command can differ from platform to platform.
+
+The created executable, located at `build/libs/MindustryAutoSync.jar`, runs on both desktop and Android.
+
+## Contributing
+
+This repository does not accept new contributions for now.
+
+There are a few underlying issues with the current code.
+These include failures to update schematics and losing sectors.
+
+Until I refactor the code in order to fix these issues, I will not accept PRs fixing basic issues.

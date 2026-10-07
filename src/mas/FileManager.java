@@ -8,6 +8,7 @@ import arc.backend.android.AndroidApplication;
 import arc.files.Fi;
 import arc.func.Cons;
 import mindustry.Vars;
+import mindustry.ui.FileChooser;
 
 public class FileManager {
     /**
@@ -47,7 +48,13 @@ public class FileManager {
                 }
             });
         } else {
-            Vars.platform.showFileChooser(open, title, extension, f -> {cons.get(f.absolutePath());});
+            mindustry.ui.FileChooser.FileChooserParams params = FileChooser
+                    .save(extension)
+                    .title(title)
+                    .extensions(extension);
+            params.handler = f->cons.get(f.absolutePath());
+
+            Vars.platform.showFileChooser(params);
         }
     }
 }

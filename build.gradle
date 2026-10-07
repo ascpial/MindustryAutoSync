@@ -37,7 +37,7 @@ java{
 }
 
 ext{
-    mindustryVersion = 'v156' //the build number that this mod is made for
+    mindustryVersion = 'v160' //the build number that this mod is made for
     jabelVersion = "93fde537c7"
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
@@ -59,8 +59,8 @@ dependencies{
 
     annotationProcessor "Anuken:jabel:v1.0.0"
 
-    compileOnly "com.github.Anuken.Arc:arc-core:b1b048e64f"
-    compileOnly "com.github.Anuken.Arc:backend-android:b1b048e64f"
+    compileOnly "com.github.Anuken.Arc:arc-core:v160.5"
+    compileOnly "com.github.Anuken.Arc:backend-android:v160.5"
 
     def version, highestVersion
     new File((String)sdkRoot, "/platforms").eachFileMatch ~/android-\d+/, {
